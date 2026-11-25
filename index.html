@@ -43,63 +43,62 @@ pre{font:13px/1.55 "IBM Plex Mono",ui-monospace,monospace;background:var(--soft)
 <h2>No database yet?</h2>
 <p class="sub" style="margin:10px 0 0">If your site needs to store things like sign-ups, messages or bookings, use this prompt so it's set up safely from the start.</p>
 <details style="margin-top:6px;border-top:0"><summary>Prompt for adding a database</summary>
-<pre id="p0">I need to add a database to my startup's website.
+<pre id="p0">I need to add a database to my startup's website, so it can save things like sign-ups or messages.
 
 What the site does: [short description]
-What I need to store: [e.g. contact form messages, user accounts, bookings]
-Who should be able to see it: [e.g. only me as admin / each user only their own data]
-Current setup: [e.g. static site on GitHub Pages, Next.js, WordPress]
+What I need to save: [e.g. contact form messages, user accounts, bookings]
+Who should be able to see it: [e.g. only me / each user only their own data]
+How the site is built now: [e.g. GitHub Pages, WordPress, Next.js, made with Lovable]
 
-Set it up securely:
-- Recommend a simple option that fits my setup and explain why
-- Only store what I listed, nothing extra
-- Access rules from day one: nobody can read or change data unless they're allowed to
-- If you use Supabase or Firebase, turn on Row Level Security / security rules for every table and write the policies
-- Secret keys only on the server or in environment variables, never in the website's code
-- Check data on the server before saving it
-- Limit how often the form can be submitted, to stop spam
+Please set it up safely:
+- Suggest a simple option that fits my site and explain why
+- Only save what I listed, nothing extra
+- Nobody can see or change the data unless they're allowed to, from day one (if you use Supabase or Firebase, set up the access rules for every table)
+- Keep secret keys hidden, never in the website's code
+- Check what people send before saving it
+- Stop the form from being spammed
 
-Explain the setup step by step, assuming I haven't done this before.
-At the end, tell me how to test that a stranger can't read the data.</pre>
+Explain each step simply, as if I've never done this before.
+At the end, show me how to test that a stranger can't see the data.</pre>
 <button class="copy" data-t="p0">Copy</button></details>
 
-<details><summary>Prompt for building with security in mind</summary>
+<details><summary>Prompt for building something new safely</summary>
 <pre id="p1">My startup: [what it does]
-Users: [who logs in, what they can do]
-Tech: [e.g. PHP + MySQL, Next.js + Supabase]
+Who uses it: [who logs in and what they can do]
+How it's built: [e.g. PHP + MySQL, Next.js + Supabase, Lovable]
 
-Build this secure by default:
-- Every page and API route checks the user is allowed to access that specific record, not just that they're logged in
-- Users can't change fields like role, price or owner through the request
-- Admin routes are checked on the server
-- Supabase/Firebase: Row Level Security or security rules on every table, limited to the owner
-- Rate-limit login and password reset
-- Reset links expire and are single-use
-- Sessions expire; cookies HttpOnly, Secure, SameSite
-- Validate input on the server, escape output, parameterised queries
-- CSRF protection on state-changing requests
-- File uploads: allow-listed types, size limit, stored outside the web root
-- Secrets only in environment variables, never in client code or Git
-- Only use well-known, maintained packages
+Build this so it's safe from the start:
+- Users can only see and change their own data. Check this on every page, not just that they're logged in
+- Only admins can open admin pages, and this is checked behind the scenes, not just by hiding buttons
+- If you use Supabase or Firebase, set up access rules for every table so people only reach their own data
+- Block or slow down repeated wrong passwords
+- Password reset links expire and only work once
+- Logins time out, and logging out really ends the session
+- Double-check everything people send before saving it, and show what they type as plain text
+- Protect forms from being sent by other websites
+- Uploads: only the file types I need, with a size limit
+- Keep all secret keys hidden, never in the website's code or on GitHub
+- Only use well-known, up-to-date add-ons
 
-When done, list every remaining security risk and what I need to configure before launch.</pre>
+When you're done, list anything that's still not safe and what I need to set up before launch.</pre>
 <button class="copy" data-t="p1">Copy</button></details>
 
-<details><summary>Prompt for reviewing existing code</summary>
-<pre id="p2">Review this code as a security reviewer before it goes to production.
+<details><summary>Prompt for checking code you already have</summary>
+<pre id="p2">Check this code for security problems before it goes live.
 
-Focus on:
-- Broken access control (can a user read or change another user's records?)
-- Authentication and session handling
-- Exposed secrets or keys
-- Input validation, output escaping, injection
-- CSRF on state-changing requests
-- Database permissions / row-level rules
-- Outdated or unknown dependencies
+Look for:
+- Can one user see or change another user's data?
+- Are logging in, password reset and logging out safe?
+- Are any secret keys or passwords visible?
+- Is everything people send checked, and shown as plain text?
+- Can other websites send forms as my users?
+- Are the database access rules set up correctly?
+- Are any add-ons old or unknown?
 
-For each finding: explain the risk, rate it high/medium/low, and give the fix. Don't conclude it's secure unless every point was checked.
+For each problem: explain it in simple words, say how serious it is (high, medium or low), and show the fix.
+Don't tell me it's safe unless you've checked every point.
 
-[paste code]</pre>
+[paste your code here]</pre>
 <button class="copy" data-t="p2">Copy</button></details>
 
 <p class="end">Samuel Rooke · Cybersecurity Risks in AI-Generated Web Code</p>
@@ -116,10 +115,10 @@ const sections=[
 ["Sign-up doesn't reveal who has an account","Sign up with an email that's already registered. The site shouldn't say it exists."]]],
 ["Passwords and keys",[
 ["No secret keys visible on the site","Right-click the page, choose View page source and search for \"key\" or \"secret\". Nothing private should show up."],
-["No secret keys on GitHub","Check your repo, including old versions. If a key was ever uploaded, replace it with a new one."],
+["No secret keys on GitHub","Check your GitHub project, including older versions of the files. If a key was ever uploaded, replace it with a new one."],
 ["Paid services have spending limits","Set a monthly limit for services like OpenAI, Stripe or Google Maps, so a leaked key can't cost you thousands."]]],
 ["Forms and what people send",[
-["Forms are checked on the server too","Checks in the browser can be skipped. The server should check what's sent before saving it."],
+["Forms are double-checked before saving","Checks on the page itself can be skipped. Your site should check what's sent again before saving it."],
 ["What people type shows up as plain text","Type <b>hi</b> in a name or comment field. You should see the tags, not bold text."],
 ["Uploads are limited","Only the file types you actually need, with a size limit."],
 ["You only keep the data you need","Know what personal data you store and why. Under GDPR, less is better."]]],
